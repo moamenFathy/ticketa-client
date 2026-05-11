@@ -1,26 +1,84 @@
+```gitignore
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+.next/
+.nuxt/
+public/dist/
+out/
+
+# Environment variables
+.env
+.env.local
+.env.*
+!.env.example
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
 # Logs
-logs
 *.log
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Coverage reports
+coverage/
+htmlcov/
+.coverage
+
+# Python specific
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.coverage
+.nox/
+.pytest_cache/
+.mypy_cache/
+.hypothesis/
+
+# Node.js specific
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
+node_modules/
+dist/
+build/
+.nyc_output/
+coverage/
+*.lcov
+.nyc_output
+coverage/
 
-node_modules
+# TypeScript specific
+*.tsbuildinfo
+.next
+.nuxt
 dist
-dist-ssr
-*.local
+build
 
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-*.env
-*.github
+# Temporary files
+*.tmp
+*.temp
+```
+
+Wait, I need to reconsider this. The input only shows modified source files (.tsx), not build artifacts or dependencies. Let me re-evaluate:
+
+The changes are only to source code files (`Card.tsx` and `MovieDetails.tsx`), which are TypeScript React component files. There are no build artifacts, dependency directories, or temporary files in the change list that would require adding to .gitignore.
+
+Output: (empty)

@@ -43,7 +43,7 @@ const Card = ({ movie }: Props) => {
             >
               {movie.genres[0] && (
                 <Badge className="bg-orange-600 hover:bg-orange-700 text-[10px] font-black uppercase tracking-wider px-3 py-1 border-none shadow-xl">
-                  {movie.genres[0]}
+                  {movie.genres[0].name}
                 </Badge>
               )}
             </motion.div>

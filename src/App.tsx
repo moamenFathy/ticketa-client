@@ -3,6 +3,8 @@ import RootLayout from "./pages/layout/RootLayout";
 import Home from "./pages/Home";
 import MovieDetails from "./pages/MovieDetails";
 import Showtimes from "./pages/Showtimes";
+import ShowtimeSeats from "./pages/ShowtimeSeats";
+import Login from "./pages/Login";
 
 const App = () => {
   return (
@@ -11,8 +13,9 @@ const App = () => {
         <Route index path="/" element={<Home />} />
         <Route path="movies" element={<h1>Movies</h1>} />
         <Route path="showtimes" element={<Showtimes />} />
+        <Route path="showtimes/:id" element={<ShowtimeSeats />} />
         <Route path="movies/:id" element={<MovieDetails />} />
-        <Route path="login" element={<h1>Login</h1>} />
+        <Route path="login" element={<Login />} />
         <Route path="register" element={<h1>Register</h1>} />
         <Route path="*" element={<h1>not found</h1>} />
       </Route>

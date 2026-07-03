@@ -1,4 +1,4 @@
-import { getCategoryStyle, rowLabel, seatKey } from "@/lib/utils";
+import { getCategoryStyle, getSkip, rowLabel, seatKey } from "@/lib/utils";
 import type { ShowtimeSeats } from "@/types/showtimes";
 import { motion } from "framer-motion";
 import { Armchair } from "lucide-react";
@@ -21,20 +21,13 @@ const SeatGrid = ({
   toggleSeat,
 }: Props) => {
   return (
-    <div className="px-4 md:px-8 pb-8 pt-2 overflow-x-auto">
+    <div className="px-4 md:px-8 pb-8 pt-2 overflow-x-auto responsive-seats">
       <div className="flex flex-col gap-1.5 min-w-max mx-auto w-fit">
         {Array.from({ length: rows }, (_, rowIdx) => {
           const category = seatsData!.rowCategoryMap[rowIdx + 1] ?? "Default";
           const style = getCategoryStyle(category);
           const aisleAt = Math.ceil(seatsPerRow / 2);
 
-          // Stadium bowl shape: first/last rows narrower
-          const getSkip = (ri: number, total: number): number => {
-            if (ri === 0) return 3; // first row
-            if (ri === total - 1) return 2; // last row
-            if (ri === 1 || ri === total - 2) return 0; // second rows full
-            return 0; // middle rows full
-          };
           const skip = getSkip(rowIdx, rows);
 
           // Render a single seat cell

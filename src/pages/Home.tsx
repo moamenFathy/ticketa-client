@@ -1,9 +1,13 @@
 import HeroSection from "@/components/HeroSection";
 import MovieList from "@/components/MovieList";
-import ComingSoonList from "@/components/ComingSoonList";
+import GenreMovieList from "@/components/GenreMovieList";
 import { MovieListSkeleton } from "@/components/skeletons/MovieListSkeleton";
 import { Button } from "@/components/ui/button";
-import { useNowPlayingMovies, useComingSoonMovies } from "@/hooks/useMovies";
+import {
+  useNowPlayingMovies,
+  useComingSoonMovies,
+  useMostPopularMovies,
+} from "@/hooks/useMovies";
 import { Link } from "react-router-dom";
 import ErrorState from "@/components/ErrorState";
 import HeroSectionSkeleton from "@/components/skeletons/HeroSectionSkeleton";
@@ -16,6 +20,7 @@ const Home = () => {
     isError: nowPlayingError,
     refetch: refetchNowPlaying,
   } = useNowPlayingMovies();
+
   const {
     data: comingSoon,
     isLoading: comingSoonLoading,
@@ -23,28 +28,38 @@ const Home = () => {
     refetch: refetchComingSoon,
   } = useComingSoonMovies();
 
-  if (nowPlayingLoading || comingSoonLoading)
+  const {
+    data: heroMovies,
+    isLoading: heroMoviesLoading,
+    isError: heroMoviesError,
+    refetch: refetchHeroMovies,
+  } = useMostPopularMovies();
+
+  if (nowPlayingLoading || comingSoonLoading || heroMoviesLoading)
     return (
       <>
         <HeroSectionSkeleton />
         <MovieListSkeleton />
       </>
     );
-  if ((nowPlayingError || !nowPlaying) && (comingSoonError || !comingSoon))
+  if (
+    (nowPlayingError || !nowPlaying) &&
+    (comingSoonError || !comingSoon) &&
+    (heroMoviesError || !heroMovies)
+  )
     return (
       <ErrorState
         refetch={() => {
           refetchNowPlaying();
           refetchComingSoon();
+          refetchHeroMovies();
         }}
       />
     );
 
-  const heroMovies = nowPlaying?.slice(0, 6) || [];
-
   return (
     <>
-      <HeroSection movies={heroMovies} />
+      <HeroSection movies={heroMovies || []} />
       <section className="pt-12">
         <div className="flex justify-between items-center px-6">
           <h1 className="text-2xl font-bold">Now showing</h1>
@@ -57,9 +72,9 @@ const Home = () => {
             </Button>
           </Link>
         </div>
-        <div className="p-6 mx-auto">
+        <div className="py-6 mx-auto">
           {nowPlaying && nowPlaying.length > 0 ? (
-            <MovieList movies={nowPlaying} />
+            <GenreMovieList movies={nowPlaying} />
           ) : (
             <p className="text-muted-foreground text-center py-12">
               No upcoming movies yet. Check back later!
@@ -72,9 +87,9 @@ const Home = () => {
         <div className="flex justify-between items-center px-6">
           <h1 className="text-2xl font-bold">Coming Soon</h1>
         </div>
-        <div className="p-6 mx-auto">
+        <div className="py-6 mx-auto">
           {comingSoon && comingSoon.length > 0 ? (
-            <ComingSoonList movies={comingSoon} />
+            <MovieList movies={comingSoon} comingSoon />
           ) : (
             <p className="text-muted-foreground text-center py-12">
               No upcoming movies yet. Check back later!

@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import confetti from "canvas-confetti";
 import { motion } from "framer-motion";
 import { Button } from "./ui/button";
 import { CheckCircle2, ChevronLeft, Copy } from "lucide-react";
@@ -8,7 +10,6 @@ interface Props {
   selectedList: string[];
   movieTitle: string;
   rowLabel: (row: number) => string;
-  onClick: () => void;
   bookingReference?: string;
   totalAmount?: string | number;
 }
@@ -17,11 +18,36 @@ const Confirmation = ({
   selectedList,
   movieTitle,
   rowLabel,
-  onClick,
   bookingReference,
   totalAmount,
 }: Props) => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const end = Date.now() + 2000;
+
+    const frame = () => {
+      confetti({
+        particleCount: 3,
+        angle: 60,
+        spread: 55,
+        origin: { x: 0, y: 0.7 },
+      });
+      confetti({
+        particleCount: 3,
+        angle: 120,
+        spread: 55,
+        origin: { x: 1, y: 0.7 },
+      });
+
+      if (Date.now() < end) {
+        requestAnimationFrame(frame);
+      }
+    };
+
+    frame();
+  }, []);
+
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
       <motion.div
@@ -47,6 +73,9 @@ const Confirmation = ({
             {selectedList.length} seat{selectedList.length !== 1 ? "s" : ""}{" "}
             secured for{" "}
             <span className="text-foreground font-semibold">{movieTitle}</span>
+          </p>
+          <p className="text-muted-foreground/60 text-sm italic">
+            We hope you enjoy your movie! 🍿
           </p>
         </div>
 
@@ -99,11 +128,11 @@ const Confirmation = ({
           <Button
             variant="outline"
             className="rounded-full"
-            onClick={() => navigate(-1)}
+            onClick={() => navigate("/showtimes")}
           >
             <ChevronLeft className="w-4 h-4 mr-1" /> Back to showtimes
           </Button>
-          <Button className="rounded-full" onClick={onClick}>
+          <Button className="rounded-full" onClick={() => navigate(-1)}>
             Book More
           </Button>
         </div>

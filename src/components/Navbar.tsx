@@ -2,11 +2,10 @@ import { Link, NavLink } from "react-router-dom";
 import { Calendar, Home, Moon, Sun } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { useAuth, useGoogleAuth, useLogout } from "@/hooks/useAuth";
+import { useAuth, useLogout } from "@/hooks/useAuth";
 import UserDropdown from "./UserDropdown";
 import MobileMenu from "./MobileMenu";
 import logo from "../assets/final_logo.svg";
-import { useGoogleOneTapLogin } from "@react-oauth/google";
 
 const navLinks = [
   { to: "/", label: "Home", icon: Home },
@@ -16,30 +15,34 @@ const navLinks = [
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [dark, setDark] = useState(
-    () => localStorage.getItem("theme") === "dark",
+    () => localStorage.getItem("theme") === "dark"
+      || (!localStorage.getItem("theme") && matchMedia("(prefers-color-scheme: dark)").matches),
   );
-  const { user, isLoggedIn, isInitializing } = useAuth();
+  const [userPreference, setUserPreference] = useState(
+    () => !!localStorage.getItem("theme"),
+  );
+  const { user, isLoggedIn } = useAuth();
   const logoutMutation = useLogout();
-  const { mutate: googleAuth } = useGoogleAuth();
-
-  useGoogleOneTapLogin({
-    onSuccess: (credentialResponse) => {
-      if (credentialResponse.credential) {
-        googleAuth(credentialResponse.credential);
-      }
-    },
-    onError: () => {
-      console.error("Google One Tap Login Failed");
-    },
-    disabled: isLoggedIn || isInitializing,
-    cancel_on_tap_outside: false,
-    use_fedcm_for_prompt: false, // Disable FedCM to fix NetworkError across different accounts
-  });
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", dark);
-    localStorage.setItem("theme", dark ? "dark" : "light");
-  }, [dark]);
+    if (userPreference) {
+      localStorage.setItem("theme", dark ? "dark" : "light");
+    }
+  }, [dark, userPreference]);
+
+  useEffect(() => {
+    if (userPreference) return;
+    const mq = matchMedia("(prefers-color-scheme: dark)");
+    const handler = (e: MediaQueryListEvent) => setDark(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, [userPreference]);
+
+  const toggleTheme = () => {
+    setUserPreference(true);
+    setDark((prev) => !prev);
+  };
 
   const handleLogout = () => {
     logoutMutation.mutate();
@@ -94,7 +97,7 @@ export default function Navbar() {
         {/* Right side */}
         <div className="flex items-center gap-3">
           <button
-            onClick={() => setDark(!dark)}
+            onClick={toggleTheme}
             className="p-2 rounded-full text-muted-foreground hover:text-foreground hover:bg-accent transition-all duration-300"
             aria-label="Toggle theme"
           >

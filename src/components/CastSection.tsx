@@ -52,6 +52,7 @@ export const CastSection = ({ cast }: CastSectionProps) => {
                     <img
                       src={`${TMDB_IMG}/w500${person.profile_path}`}
                       alt={person.name}
+                      loading="lazy"
                       className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105"
                     />
                   ) : (
@@ -60,7 +61,7 @@ export const CastSection = ({ cast }: CastSectionProps) => {
                     </div>
                   )}
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent flex flex-col justify-end p-6 select-none">
+                  <div className="absolute inset-0 bg-linear-to-t from-black via-black/40 to-transparent flex flex-col justify-end p-6 select-none">
                     <h4 className="text-lg font-black text-white leading-tight drop-shadow-md">
                       {person.name}
                     </h4>
